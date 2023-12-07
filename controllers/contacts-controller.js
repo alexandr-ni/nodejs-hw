@@ -1,18 +1,18 @@
-import contactService from "../models/contacts.js";
+import Contact from "../models/Contact.js";
 
 import { ctrlWrapper } from "../decorators/index.js";
 
 import { HttpError } from "../helpers/index.js";
 
 const getListContacts = async (req, res) => {
-  const allContacts = await contactService.getListContacts();
+  const allContacts = await Contact.find();
 
   res.json(allContacts);
 };
 
 const getContactById = async (req, res) => {
   const { contactId } = req.params;
-  const contact = await contactService.getContactById(contactId);
+  const contact = await Contact.findById(contactId);
   if (!contact) {
     throw HttpError(404, `Contact with id=${contactId} not found`);
   }
@@ -22,7 +22,7 @@ const getContactById = async (req, res) => {
 
 const removeContact = async (req, res) => {
   const { contactId } = req.params;
-  const result = await contactService.removeContact(contactId);
+  const result = await Contact.findByIdAndDelete(contactId);
   if (!result) {
     throw HttpError(404, `Contact with id=${contactId} not found`);
   }
@@ -33,14 +33,14 @@ const removeContact = async (req, res) => {
 };
 
 const addContact = async (req, res) => {
-  const result = await contactService.addContact(req.body);
+  const result = await Contact.create(req.body);
 
   res.status(201).json(result);
 };
 
 const updateContact = async (req, res) => {
   const { contactId } = req.params;
-  const result = await contactService.updateContact(contactId, req.body);
+  const result = await Contact.findByIdAndUpdate(contactId, req.body);
   if (!result) {
     throw HttpError(404, `Contact with id=${contactId} not found`);
   }
