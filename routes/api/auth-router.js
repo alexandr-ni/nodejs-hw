@@ -2,7 +2,12 @@ import express from "express";
 
 import authController from "../../controllers/auth-controller.js";
 
-import { authenticate, isEmptyBody } from "../../middlewares/index.js";
+import {
+  authenticate,
+  isEmptyBody,
+  isEmptyFile,
+  upload,
+} from "../../middlewares/index.js";
 
 import { validateBody } from "../../decorators/index.js";
 
@@ -16,6 +21,7 @@ const authRouter = express.Router();
 
 authRouter.post(
   "/signup",
+  upload.single("avatar"),
   isEmptyBody,
   validateBody(userSignupSchema),
   authController.signup
@@ -38,6 +44,14 @@ authRouter.patch(
   isEmptyBody,
   validateBody(userSubscriptionUpdateSchema),
   authController.updateSubscription
+);
+
+authRouter.patch(
+  "/avatars",
+  upload.single("avatar"),
+  authenticate,
+  isEmptyFile,
+  authController.updateAvatar
 );
 
 export default authRouter;
