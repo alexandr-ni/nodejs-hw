@@ -5,6 +5,7 @@ import fs from "fs/promises";
 import path from "path";
 
 import gravatar from "gravatar";
+import Jimp from "jimp";
 
 import User from "../models/User.js";
 
@@ -91,6 +92,11 @@ const updateSubscription = async (req, res) => {
 const updateAvatar = async (req, res) => {
   const { _id } = req.user;
   const { path: oldPath, filename } = req.file;
+
+  const img = await Jimp.read(oldPath);
+
+  img.resize(250, 250).write(oldPath);
+
   const newPath = path.join(avatarsPath, filename);
 
   await fs.rename(oldPath, newPath);
