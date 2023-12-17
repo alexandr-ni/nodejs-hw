@@ -27,6 +27,14 @@ const userSchema = new Schema(
     },
     avatarURL: String,
     token: String,
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, "Verify token is required"],
+    },
   },
   { versionKey: false }
 );
@@ -48,6 +56,10 @@ export const userSigninSchema = Joi.object({
     .pattern(emailRegex)
     .message("Email or password is wrong")
     .required(),
+});
+
+export const userEmailSchema = Joi.object({
+  email: Joi.string().pattern(emailRegex).message("Email is wrong").required(),
 });
 
 export const userSubscriptionUpdateSchema = Joi.object({

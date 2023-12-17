@@ -14,6 +14,7 @@ import { validateBody } from "../../decorators/index.js";
 import {
   userSignupSchema,
   userSigninSchema,
+  userEmailSchema,
   userSubscriptionUpdateSchema,
 } from "../../models/User.js";
 
@@ -25,6 +26,15 @@ authRouter.post(
   isEmptyBody,
   validateBody(userSignupSchema),
   authController.signup
+);
+
+authRouter.get("/verify/:verificationToken", authController.verify);
+
+authRouter.post(
+  "/verify",
+  isEmptyBody,
+  validateBody(userEmailSchema),
+  authController.resendVerify
 );
 
 authRouter.post(
